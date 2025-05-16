@@ -1,5 +1,6 @@
 [![Flutter CI](https://github.com/gabriellagziel/app-oint/actions/workflows/flutter.yml/badge.svg)](https://github.com/gabriellagziel/app-oint/actions/workflows/flutter.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![codecov](https://codecov.io/gh/gabriellagziel/app-oint/branch/main/graph/badge.svg)](https://codecov.io/gh/gabriellagziel/app-oint)
 
 # app_oint
 
