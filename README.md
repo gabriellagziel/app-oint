@@ -1,3 +1,5 @@
+[![Flutter CI](https://github.com/gabriellagziel/app-oint/actions/workflows/flutter.yml/badge.svg)](https://github.com/gabriellagziel/app-oint/actions/workflows/flutter.yml)
+
 # app_oint
 
 A new Flutter project.
