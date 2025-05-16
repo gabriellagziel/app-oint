@@ -12,3 +12,13 @@ To securely use tokens and credentials in GitHub Actions:
 5. Reference secrets in your workflow using `${{ secrets.SECRET_NAME }}`.
 
 **Never commit secrets to your repository!**
+
+## Firebase Hosting Deployment
+
+To deploy to Firebase Hosting from GitHub Actions:
+
+1. Install the Firebase CLI locally: `npm install -g firebase-tools`
+2. Log in: `firebase login`
+3. Generate a CI token: `firebase login:ci`
+4. Copy the token and add it as a secret named `FIREBASE_TOKEN` in your repo (Settings > Secrets > Actions).
+5. The deploy workflow will use this token to deploy your app.

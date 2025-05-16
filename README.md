@@ -18,3 +18,17 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Features
+- Modern Flutter project structure
+- Automated CI/CD with build, lint, test, and coverage
+- Codecov integration and badge
+- Automated releases with build artifacts
+- Firebase Hosting deployment (with secret)
+- Community and security best practices
+
+## Quickstart
+1. Clone the repo: `git clone https://github.com/gabriellagziel/app-oint.git`
+2. Install dependencies: `flutter pub get`
+3. Run the app: `flutter run`
+4. To contribute, see [CONTRIBUTING.md](CONTRIBUTING.md)
