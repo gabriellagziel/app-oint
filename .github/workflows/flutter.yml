@@ -30,8 +30,11 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Analyze (Lint)
+        run: flutter analyze
+
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
