@@ -1,0 +1,35 @@
+{
+    "chatWhatDoYouWant": "What would you like to do?",
+    "chatOptionScheduleMeeting": "Schedule a Meeting",
+    "chatSelectDate": "Select Date",
+    "chatSelectTime": "Select Time",
+    "chatTypeMessage": "Type your message...",
+    "chatSignInRequired": "Please sign in to continue",
+    "chatSuccessMessage": "Meeting created successfully",
+    "chatErrorMessage": "Failed to create meeting",
+    "chatFinishButton": "Finish",
+    "chatCompleteRequired": "Please complete all required fields",
+    "chatSummaryTitle": "Meeting Summary",
+    "chatSummaryType": "Type",
+    "chatSummaryWith": "With",
+    "chatSummaryWhen": "When",
+    "chatSummaryWhere": "Where",
+    "chatSummaryBusiness": "Business",
+    "chatSummaryReminder": "Reminder",
+    "chatSummaryNotes": "Notes",
+    "@chatWhatDoYouWant": {
+        "description": "The title shown in the chat interface"
+    },
+    "@chatOptionScheduleMeeting": {
+        "description": "Option to schedule a meeting"
+    },
+    "@chatSelectDate": {
+        "description": "Button text for date selection"
+    },
+    "@chatSelectTime": {
+        "description": "Button text for time selection"
+    },
+    "@chatTypeMessage": {
+        "description": "Placeholder text for the message input field"
+    }
+} 

@@ -1,0 +1,78 @@
+diff --git a/.github/workflows/flutter_ci.yml b/.github/workflows/flutter_ci.yml
+@@
+-  name: Flutter CI        # was indented → YAML error
++name: Flutter CI
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+@@
++# --------------------------------------------------
++#  REQUIRED METADATA
++# --------------------------------------------------
++name: app_oint               # <-- put your real package name if different
++description: Your appointment & task manager
++version: 1.0.0+1
++
+ environment:
+   sdk: ">=3.3.0 <4.0.0"
+ 
+ dependencies:
+   flutter:
+     sdk: flutter
++  flutter_localizations:
++    sdk: flutter
+   logging: ^1.2.0
+   # … everything else you already had …
+ 
+ flutter:
+   uses-material-design: true
+   generate: true             # <-- keeps l10n in sync
+ 
+diff --git a/l10n.yaml b/l10n.yaml
+@@
+ output-class: AppLocalizations
++# nothing else is needed
+ 
+diff --git a/lib/l10n/l10n_ext.dart b/lib/l10n/l10n_ext.dart
+@@
+-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
++import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+ 
+ extension L10nX on AppLocalizations {
+-  String translate(String key) {
+-    switch (key) {
+-      case 'chatWhatDoYouWant':
+-        return chatWhatDoYouWant;
+-      case 'chatOptionScheduleMeeting':
+-        return chatOptionScheduleMeeting;
+-      default:
+-        return key; // fallback
+-    }
+-  }
++  /// Dynamic lookup for chat-flow keys.
++  String translate(String key) => {
++        'chatWhatDoYouWant': chatWhatDoYouWant,
++        'chatOptionScheduleMeeting': chatOptionScheduleMeeting,
++      }[key] ??
++      key;
+ }
+ 
+diff --git a/lib/features/auth/services/auth_service.dart b/lib/features/auth/services/auth_service.dart
+@@
+-    final fbToken = accessToken.tokenString;
++    final fbToken = accessToken.token;          // API changed
+ 
+diff --git a/lib/services/auth_service.dart b/lib/services/auth_service.dart
+@@
+-    final fbToken = accessToken.tokenString;
++    final fbToken = accessToken.token;
+ 
+diff --git a/lib/features/billing/services/subscription_service.dart b/lib/features/billing/services/subscription_service.dart
+@@
+-    final url = 'https://example.com'; // unused
+-    // TODO: Launch URL in browser using url_launcher
++    // TODO: Launch URL in browser using url_launcher
+ 
+diff --git a/lib/features/meetings/controllers/meeting_chat_flow_controller.dart b/lib/features/meetings/controllers/meeting_chat_flow_controller.dart
+@@
+-import 'package:cloud_firestore/cloud_firestore.dart'; // unused
++# (unused import removed) 
