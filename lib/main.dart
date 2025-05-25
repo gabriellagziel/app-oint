@@ -12,6 +12,8 @@ import 'app_router.dart';
 import 'features/meetings/models/meeting.dart';
 import 'features/reminders/models/reminder.dart';
 import 'features/tasks/models/task.dart';
+import 'package:app_oint/core/localization/app_localizations.dart';
+import 'package:app_oint/screens/onboarding/onboarding_page.dart';
 
 final _logger = Logger('Main');
 
@@ -43,7 +45,7 @@ void main() async {
     });
   }
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const LocalizationWrapper(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
