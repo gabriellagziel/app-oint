@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:app_oint/services/invite_service.dart';
+import 'package:app_oint/services/paywall_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewMeetingScreen extends StatefulWidget {
   const NewMeetingScreen({super.key});
@@ -216,7 +218,36 @@ class _NewMeetingScreenState extends State<NewMeetingScreen> {
               const SizedBox(height: 16),
             ],
             ElevatedButton(
-              onPressed: _isCreating ? null : _createMeeting,
+              onPressed: () async {
+                final paywall = PaywallService();
+                final allowed = await paywall.canCreateMoreMeetings();
+                if (!allowed) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => AlertDialog(
+                      title: const Text('Upgrade Required'),
+                      content: const Text('You've used all 5 free meetings. Upgrade to unlimited access.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => launchUrl(
+                            Uri.parse('https://buy.stripe.com/link-to-checkout'),
+                            mode: LaunchMode.externalApplication,
+                          ),
+                          child: const Text('Upgrade (€3.99/month)'),
+                        ),
+                      ],
+                    ),
+                  );
+                  return;
+                }
+
+                // Proceed with creating the meeting
+                await _createMeeting();
+              },
               child: _isCreating
                   ? const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
