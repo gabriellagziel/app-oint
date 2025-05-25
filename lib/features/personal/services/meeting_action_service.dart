@@ -1,9 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../notifications/services/meeting_notification_service.dart';
 
 class MeetingActionService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+  final MeetingNotificationService _notifications;
+
+  MeetingActionService({
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+    MeetingNotificationService? notifications,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _auth = auth ?? FirebaseAuth.instance,
+        _notifications = notifications ?? MeetingNotificationService();
 
   Future<bool> isCreator(String meetingId) async {
     final userId = _auth.currentUser?.uid;
@@ -35,7 +45,16 @@ class MeetingActionService {
     delete(newMeeting, 'createdAt');
     delete(newMeeting, 'updatedAt');
 
-    await _firestore.collection('meetings').add(newMeeting);
+    final newDoc = await _firestore.collection('meetings').add(newMeeting);
+
+    // Schedule notifications for the new meeting
+    if (data['scheduledTime'] != null) {
+      await _notifications.scheduleMeetingReminders(
+        meetingId: newDoc.id,
+        title: data['title'] as String,
+        meetingTime: (data['scheduledTime'] as Timestamp).toDate(),
+      );
+    }
   }
 
   Future<void> rescheduleMeeting(String meetingId, DateTime newTime) async {
@@ -46,10 +65,24 @@ class MeetingActionService {
       throw Exception('Only the creator can reschedule the meeting');
     }
 
+    // Cancel existing notifications
+    await _notifications.cancelMeetingNotifications(meetingId);
+
     await _firestore.collection('meetings').doc(meetingId).update({
       'scheduledTime': Timestamp.fromDate(newTime),
       'updatedAt': FieldValue.serverTimestamp(),
     });
+
+    // Schedule new notifications
+    final doc = await _firestore.collection('meetings').doc(meetingId).get();
+    if (doc.exists) {
+      final data = doc.data() as Map<String, dynamic>;
+      await _notifications.scheduleMeetingReminders(
+        meetingId: meetingId,
+        title: data['title'] as String,
+        meetingTime: newTime,
+      );
+    }
 
     // Notify participants
     await _notifyParticipants(
@@ -66,6 +99,9 @@ class MeetingActionService {
     if (!await isCreator(meetingId)) {
       throw Exception('Only the creator can cancel the meeting');
     }
+
+    // Cancel all notifications
+    await _notifications.cancelMeetingNotifications(meetingId);
 
     await _firestore.collection('meetings').doc(meetingId).update({
       'status': 'cancelled',
@@ -87,6 +123,20 @@ class MeetingActionService {
     if (!await isCreator(meetingId)) {
       throw Exception('Only the creator can send reminders');
     }
+
+    final doc = await _firestore.collection('meetings').doc(meetingId).get();
+    if (!doc.exists) return;
+
+    final data = doc.data() as Map<String, dynamic>;
+    final scheduledTime = (data['scheduledTime'] as Timestamp).toDate();
+
+    // Schedule an immediate reminder
+    await _notifications.schedulePreMeetingReminder(
+      meetingId: meetingId,
+      title: data['title'] as String,
+      meetingTime: scheduledTime,
+      reminderOffset: const Duration(minutes: 5),
+    );
 
     // Notify participants
     await _notifyParticipants(
@@ -115,12 +165,12 @@ class MeetingActionService {
           .doc(participantId)
           .collection('notifications')
           .add({
-            'type': type,
-            'meetingId': meetingId,
-            'message': message,
-            'timestamp': FieldValue.serverTimestamp(),
-            'read': false,
-          });
+        'type': type,
+        'meetingId': meetingId,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+        'read': false,
+      });
     }
 
     // Also notify the meeting creator if they're not a participant
@@ -130,12 +180,12 @@ class MeetingActionService {
           .doc(creatorId)
           .collection('notifications')
           .add({
-            'type': type,
-            'meetingId': meetingId,
-            'message': message,
-            'timestamp': FieldValue.serverTimestamp(),
-            'read': false,
-          });
+        'type': type,
+        'meetingId': meetingId,
+        'message': message,
+        'timestamp': FieldValue.serverTimestamp(),
+        'read': false,
+      });
     }
   }
 }
