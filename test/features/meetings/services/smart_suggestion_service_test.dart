@@ -1,145 +1,242 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:app_oint/features/meetings/services/smart_suggestion_service.dart';
-import '../../../mocks/mock_test.mocks.dart';
+import 'package:clock/clock.dart';
 
+import 'smart_suggestion_service_test.mocks.dart';
+
+@GenerateMocks([
+  FirebaseFirestore,
+  User,
+  DocumentSnapshot<Map<String, dynamic>>,
+  QuerySnapshot<Map<String, dynamic>>,
+  Query<Map<String, dynamic>>,
+  DocumentReference<Map<String, dynamic>>,
+  CollectionReference<Map<String, dynamic>>,
+  QueryDocumentSnapshot<Map<String, dynamic>>,
+])
 void main() {
   late MockFirebaseFirestore mockFirestore;
-  late MockCollectionReference<Map<String, dynamic>> mockCollection;
-  late MockQuery<Map<String, dynamic>> mockQuery;
+  late MockUser mockUser;
   late MockQuerySnapshot<Map<String, dynamic>> mockQuerySnapshot;
   late MockQueryDocumentSnapshot<Map<String, dynamic>> mockDocument;
+  late MockQuery<Map<String, dynamic>> mockQuery;
   late MockDocumentReference<Map<String, dynamic>> mockDocumentRef;
+  late MockCollectionReference<Map<String, dynamic>> mockCollectionRef;
   late SmartSuggestionService service;
+  final fixedNow = DateTime(2025, 1, 1, 10);
 
   setUp(() {
     mockFirestore = MockFirebaseFirestore();
-    mockCollection = MockCollectionReference<Map<String, dynamic>>();
-    mockQuery = MockQuery<Map<String, dynamic>>();
+    mockUser = MockUser();
     mockQuerySnapshot = MockQuerySnapshot<Map<String, dynamic>>();
     mockDocument = MockQueryDocumentSnapshot<Map<String, dynamic>>();
+    mockQuery = MockQuery<Map<String, dynamic>>();
     mockDocumentRef = MockDocumentReference<Map<String, dynamic>>();
-    service = SmartSuggestionService(firestore: mockFirestore);
+    mockCollectionRef = MockCollectionReference<Map<String, dynamic>>();
 
-    when(mockFirestore.collection('meetings')).thenReturn(mockCollection);
-    when(
-      mockCollection.where('creatorId', isEqualTo: any),
-    ).thenReturn(mockQuery);
-    when(mockQuery.where('endTime', isLessThan: any)).thenReturn(mockQuery);
-    when(
-      mockQuery.where('suggestionShown', isEqualTo: false),
-    ).thenReturn(mockQuery);
-    when(mockQuery.orderBy('endTime', descending: true)).thenReturn(mockQuery);
-    when(mockQuery.limit(1)).thenReturn(mockQuery);
+    when(mockUser.uid).thenReturn('test-user');
+    when(mockFirestore.collection('meetings')).thenReturn(mockCollectionRef);
+    when(mockCollectionRef.where(any, isEqualTo: anyNamed('isEqualTo')))
+        .thenReturn(mockQuery);
+    when(mockQuery.where(any, isLessThan: anyNamed('isLessThan')))
+        .thenReturn(mockQuery);
+    when(mockQuery.where(any, isEqualTo: anyNamed('isEqualTo')))
+        .thenReturn(mockQuery);
+    when(mockQuery.orderBy(any, descending: anyNamed('descending')))
+        .thenReturn(mockQuery);
+    when(mockQuery.limit(any)).thenReturn(mockQuery);
     when(mockQuery.get()).thenAnswer((_) async => mockQuerySnapshot);
     when(mockDocument.reference).thenReturn(mockDocumentRef);
     when(mockDocumentRef.update(any)).thenAnswer((_) async {});
+    when(mockDocument.id).thenReturn('test-meeting-id');
+
+    // Mock suggestion logs collection
+    when(mockFirestore.collection('suggestion_logs'))
+        .thenReturn(mockCollectionRef);
+    when(mockCollectionRef.doc(any)).thenReturn(mockDocumentRef);
+
+    service = SmartSuggestionService(
+      firestore: mockFirestore,
+      clock: Clock.fixed(fixedNow),
+    );
   });
 
-  testWidgets('shows dialog when recent meeting found', (
-    WidgetTester tester,
-  ) async {
-    // Arrange
+  testWidgets('shows dialog when recent meeting found', (tester) async {
+    // Setup meeting data
     when(mockQuerySnapshot.docs).thenReturn([mockDocument]);
+    when(mockDocument.exists).thenReturn(true);
     when(mockDocument.data()).thenReturn({
       'title': 'Test Meeting',
-      'startTime': DateTime.now().subtract(const Duration(hours: 2)),
-      'endTime': DateTime.now().subtract(const Duration(hours: 1)),
+      'startTime': Timestamp.fromDate(DateTime(2025, 1, 1, 8)),
+      'endTime': Timestamp.fromDate(DateTime(2025, 1, 1, 9)),
+      'suggestionShown': false,
     });
 
-    // Act
+    // Setup suggestion log to not exist
+    final mockSuggestionLog = MockDocumentSnapshot<Map<String, dynamic>>();
+    when(mockSuggestionLog.exists).thenReturn(false);
+    when(mockDocumentRef.get()).thenAnswer((_) async => mockSuggestionLog);
+
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
-          builder:
-              (context) => Scaffold(
-                body: ElevatedButton(
-                  onPressed:
-                      () => service.checkAndPromptSmartSuggestion(
-                        context: context,
-                        userId: 'test-user',
-                      ),
-                  child: const Text('Check Suggestions'),
-                ),
-              ),
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await service.maybeShowRepeatMeetingDialog(context, mockUser);
+              },
+              child: const Text('Test'),
+            );
+          },
         ),
       ),
     );
 
-    await tester.tap(find.text('Check Suggestions'));
-    await tester.pumpAndSettle();
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
 
-    // Assert
+    expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Repeat this meeting?'), findsOneWidget);
-    expect(find.text('Test Meeting'), findsOneWidget);
-    expect(find.text('Duplicate'), findsOneWidget);
-    expect(find.text('Reschedule'), findsOneWidget);
+    expect(
+      find.text('You met recently for "Test Meeting". Want to repeat it?'),
+      findsOneWidget,
+    );
     expect(find.text('Dismiss'), findsOneWidget);
   });
 
-  testWidgets('does not show dialog when no recent meetings', (
-    WidgetTester tester,
-  ) async {
-    // Arrange
+  testWidgets('does not show dialog when no recent meetings', (tester) async {
     when(mockQuerySnapshot.docs).thenReturn([]);
 
-    // Act
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
-          builder:
-              (context) => Scaffold(
-                body: ElevatedButton(
-                  onPressed:
-                      () => service.checkAndPromptSmartSuggestion(
-                        context: context,
-                        userId: 'test-user',
-                      ),
-                  child: const Text('Check Suggestions'),
-                ),
-              ),
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await service.maybeShowRepeatMeetingDialog(context, mockUser);
+              },
+              child: const Text('Test'),
+            );
+          },
         ),
       ),
     );
 
-    await tester.tap(find.text('Check Suggestions'));
-    await tester.pumpAndSettle();
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
 
-    // Assert
-    expect(find.text('Repeat this meeting?'), findsNothing);
+    expect(find.byType(AlertDialog), findsNothing);
   });
 
-  testWidgets('handles errors gracefully', (WidgetTester tester) async {
-    // Arrange
-    when(mockQuery.get()).thenThrow(Exception('Test error'));
+  testWidgets('handles errors gracefully', (tester) async {
+    when(mockQuerySnapshot.docs).thenReturn([mockDocument]);
+    when(mockDocument.exists).thenReturn(true);
+    when(mockDocument.data()).thenReturn({
+      'title': 'Test Meeting',
+      'startTime': Timestamp.fromDate(DateTime(2025, 1, 1, 8)),
+      'endTime': Timestamp.fromDate(DateTime(2025, 1, 1, 9)),
+      'suggestionShown': false,
+    });
 
-    // Act
+    // Setup suggestion log to not exist
+    final mockSuggestionLog = MockDocumentSnapshot<Map<String, dynamic>>();
+    when(mockSuggestionLog.exists).thenReturn(false);
+    when(mockDocumentRef.get()).thenAnswer((_) async => mockSuggestionLog);
+
+    when(mockDocumentRef.update(any)).thenThrow(Exception('Test error'));
+
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
-          builder:
-              (context) => Scaffold(
-                body: ElevatedButton(
-                  onPressed:
-                      () => service.checkAndPromptSmartSuggestion(
-                        context: context,
-                        userId: 'test-user',
-                      ),
-                  child: const Text('Check Suggestions'),
-                ),
-              ),
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await service.maybeShowRepeatMeetingDialog(context, mockUser);
+              },
+              child: const Text('Test'),
+            );
+          },
         ),
       ),
     );
 
-    await tester.tap(find.text('Check Suggestions'));
-    await tester.pumpAndSettle();
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
 
-    // Assert
-    expect(
-      find.text('Failed to check for meeting suggestions'),
-      findsOneWidget,
+    expect(find.byType(AlertDialog), findsOneWidget);
+  });
+
+  testWidgets('does not show dialog for meetings older than 24h',
+      (tester) async {
+    when(mockQuerySnapshot.docs).thenReturn([mockDocument]);
+    when(mockDocument.exists).thenReturn(true);
+    when(mockDocument.data()).thenReturn({
+      'title': 'Test Meeting',
+      'startTime': Timestamp.fromDate(DateTime(2024, 12, 30, 8)),
+      'endTime': Timestamp.fromDate(DateTime(2024, 12, 30, 9)),
+      'suggestionShown': false,
+    });
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await service.maybeShowRepeatMeetingDialog(context, mockUser);
+              },
+              child: const Text('Test'),
+            );
+          },
+        ),
+      ),
     );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    expect(find.byType(AlertDialog), findsNothing);
+  });
+
+  testWidgets('does not show dialog for already suggested meetings',
+      (tester) async {
+    when(mockQuerySnapshot.docs).thenReturn([mockDocument]);
+    when(mockDocument.exists).thenReturn(true);
+    when(mockDocument.data()).thenReturn({
+      'title': 'Test Meeting',
+      'startTime': Timestamp.fromDate(DateTime(2025, 1, 1, 8)),
+      'endTime': Timestamp.fromDate(DateTime(2025, 1, 1, 9)),
+      'suggestionShown': false,
+    });
+
+    // Setup suggestion log to exist
+    final mockSuggestionLog = MockDocumentSnapshot<Map<String, dynamic>>();
+    when(mockSuggestionLog.exists).thenReturn(true);
+    when(mockDocumentRef.get()).thenAnswer((_) async => mockSuggestionLog);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Builder(
+          builder: (context) {
+            return ElevatedButton(
+              onPressed: () async {
+                await service.maybeShowRepeatMeetingDialog(context, mockUser);
+              },
+              child: const Text('Test'),
+            );
+          },
+        ),
+      ),
+    );
+
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pump();
+
+    expect(find.byType(AlertDialog), findsNothing);
   });
 }
