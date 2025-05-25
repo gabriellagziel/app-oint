@@ -1,40 +1,54 @@
-import 'dart:js_interop';
+import 'dart:html' as html;
+import 'package:js/js.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:logging/logging.dart';
 
 final _logger = Logger('WebUtils');
 
-@JS('window.google')
-external dynamic get google;
-
-@JS('document')
-external Document get document;
-
 @JS()
 @staticInterop
 class Document {
-  external Element createElement(String tagName);
-  external BodyElement? get body;
-  external HeadElement? get head;
+  external factory Document();
+}
+
+extension DocumentExtension on Document {
+  external html.Element createElement(String tagName);
+  external html.BodyElement? get body;
+  external html.HeadElement? get head;
 }
 
 @JS()
 @staticInterop
 class Element {
+  external factory Element();
+}
+
+extension ElementExtension on Element {
   external void setAttribute(String name, String value);
 }
 
 @JS()
 @staticInterop
-class BodyElement extends Element {
-  external void appendChild(Element element);
+class BodyElement {
+  external factory BodyElement();
+}
+
+extension BodyElementExtension on BodyElement {
+  external void appendChild(html.Element element);
 }
 
 @JS()
 @staticInterop
-class HeadElement extends Element {
-  external void appendChild(Element element);
+class HeadElement {
+  external factory HeadElement();
 }
+
+extension HeadElementExtension on HeadElement {
+  external void appendChild(html.Element element);
+}
+
+@JS('google')
+external dynamic get google;
 
 void registerGoogleSignInButtonViewFactory() {
   if (!kIsWeb) return;
@@ -87,4 +101,23 @@ void setupGoogleSignInInterop(Function(dynamic) onCredential) {
     _logger.severe('Error setting up Google Sign-In interop: $e');
     rethrow;
   }
+}
+
+// Safe web utility functions
+void injectGoogleMapsScript(String apiKey) {
+  if (!kIsWeb) return;
+
+  final script = html.ScriptElement()
+    ..src = 'https://maps.googleapis.com/maps/api/js?key=$apiKey'
+    ..defer = true;
+  html.document.head?.appendChild(script);
+}
+
+void injectStripeScript(String publishableKey) {
+  if (!kIsWeb) return;
+
+  final script = html.ScriptElement()
+    ..src = 'https://js.stripe.com/v3/'
+    ..defer = true;
+  html.document.head?.appendChild(script);
 }

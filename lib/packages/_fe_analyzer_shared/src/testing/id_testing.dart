@@ -3,11 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
-import 'annotated_code_helper.dart';
-import 'id.dart';
-import 'id_generation.dart';
-import '../util/colors.dart' as colors;
-import '../util/options.dart';
+import 'package:_fe_analyzer_shared/src/testing/annotated_code_helper.dart';
+import 'package:_fe_analyzer_shared/src/testing/id.dart';
+import 'package:_fe_analyzer_shared/src/testing/id_generation.dart';
+import 'package:_fe_analyzer_shared/src/util/colors.dart' as colors;
+import 'package:_fe_analyzer_shared/src/util/options.dart';
+import 'package:_fe_analyzer_shared/src/testing/id_testing.dart'
+    show MemberAnnotations;
 
 const String cfeMarker = 'cfe';
 const String dart2jsMarker = 'dart2js';
@@ -136,61 +138,6 @@ Annotation? createAnnotationsDiff(Annotation? expected, Annotation? actual) {
         actual.suffix);
   } else {
     return null;
-  }
-}
-
-/// Encapsulates the member data computed for each source file of interest.
-/// It's a glorified wrapper around a map of maps, but written this way to
-/// provide a little more information about what it's doing. [DataType] refers
-/// to the type this map is holding -- it is either [IdValue] or [ActualData].
-class MemberAnnotations<DataType> {
-  /// For each Uri, we create a map associating an element id with its
-  /// corresponding annotations.
-  final Map<Uri, Map<Id, DataType>> _computedDataForEachFile =
-      new Map<Uri, Map<Id, DataType>>();
-
-  /// Member or class annotations that don't refer to any of the user files.
-  final Map<Id, DataType> globalData = <Id, DataType>{};
-
-  void operator []=(Uri file, Map<Id, DataType> computedData) {
-    _computedDataForEachFile[file] = computedData;
-  }
-
-  void forEach(void f(Uri file, Map<Id, DataType> computedData)) {
-    _computedDataForEachFile.forEach(f);
-  }
-
-  Map<Id, DataType>? operator [](Uri file) {
-    if (!_computedDataForEachFile.containsKey(file)) {
-      _computedDataForEachFile[file] = <Id, DataType>{};
-    }
-    return _computedDataForEachFile[file];
-  }
-
-  @override
-  String toString() {
-    StringBuffer sb = new StringBuffer();
-    sb.write('MemberAnnotations(');
-    String comma = '';
-    if (_computedDataForEachFile.isNotEmpty &&
-        (_computedDataForEachFile.length > 1 ||
-            _computedDataForEachFile.values.single.isNotEmpty)) {
-      sb.write('data:{');
-      _computedDataForEachFile.forEach((Uri uri, Map<Id, DataType> data) {
-        sb.write(comma);
-        sb.write('$uri:');
-        sb.write(data);
-        comma = ',';
-      });
-      sb.write('}');
-    }
-    if (globalData.isNotEmpty) {
-      sb.write(comma);
-      sb.write('global:');
-      sb.write(globalData);
-    }
-    sb.write(')');
-    return sb.toString();
   }
 }
 
@@ -602,8 +549,9 @@ Future<TestResult<T>> checkCode<T>(
           {'dummyMarker': expectedMaps},
           compiledData.mainUri,
           {'dummyMarker': compiledData.actualMaps},
-          dataInterpreter,
-          createDiff: createAnnotationsDiff);
+          dataInterpreter as DataInterpreter<dynamic>,
+          createDiff: createAnnotationsDiff as Annotation? Function(
+              Annotation?, Annotation?)?);
       for (Uri uri in neededDiffs) {
         print('--annotations diff [${uri.pathSegments.last}]-------------');
         AnnotatedCode? annotatedCode = code[uri];
@@ -950,7 +898,7 @@ Future<void> runTests<T>(Directory dataDir,
             testData.expectedMaps,
             testData.entryPoint,
             actualData,
-            dataInterpreter!,
+            dataInterpreter! as DataInterpreter<dynamic>,
             forceUpdate: forceUpdate);
         annotations.forEach((Uri uri, List<Annotation> annotations) {
           AnnotatedCode? code = testData.code[uri];

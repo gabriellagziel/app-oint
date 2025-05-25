@@ -5,20 +5,36 @@ import 'package:json_annotation/json_annotation.dart';
 part 'meeting.freezed.dart';
 part 'meeting.g.dart';
 
-@freezed
-class Meeting with _$Meeting {
-  const factory Meeting({
-    required String id,
-    required String title,
-    String? description,
-    @JsonKey(name: 'new', fromJson: _dateFromJson, toJson: _dateToJson)
-    required DateTime date,
-    @JsonKey(name: 'new', fromJson: _durationFromJson, toJson: _durationToJson)
-    required Duration duration,
-  }) = _Meeting;
+class Meeting {
+  final String id;
+  final String title;
+  final DateTime startsAt;
+  final String? description;
+  final String creatorId;
 
-  factory Meeting.fromJson(Map<String, dynamic> json) =>
-      _$MeetingFromJson(json);
+  Meeting({
+    required this.id,
+    required this.title,
+    required this.startsAt,
+    this.description,
+    required this.creatorId,
+  });
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'startsAt': startsAt.toIso8601String(),
+    'description': description,
+    'creatorId': creatorId,
+  };
+
+  factory Meeting.fromJson(Map<String, dynamic> json) => Meeting(
+    id: json['id'] as String,
+    title: json['title'] as String,
+    startsAt: DateTime.parse(json['startsAt'] as String),
+    description: json['description'] as String?,
+    creatorId: json['creatorId'] as String,
+  );
 }
 
 DateTime _dateFromJson(Timestamp timestamp) => timestamp.toDate();
