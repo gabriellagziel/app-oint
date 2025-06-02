@@ -11,21 +11,21 @@ graph TD
     A[User Interface] --> B[Feature Modules]
     B --> C[Core Services]
     C --> D[Firebase Services]
-    
+
     subgraph "Feature Modules"
         E[Personal Dashboard]
         F[Appointment Management]
         G[Calendar Integration]
         H[Notifications]
     end
-    
+
     subgraph "Core Services"
         I[Authentication]
         J[Data Management]
         K[Localization]
         L[State Management]
     end
-    
+
     subgraph "Firebase Services"
         M[Firestore]
         N[Authentication]
@@ -123,4 +123,4 @@ graph TD
 - [Flutter Documentation](https://docs.flutter.dev/)
 - [Firebase Documentation](https://firebase.google.com/docs)
 - [Riverpod Documentation](https://riverpod.dev/docs/getting_started)
-- [AGENTI V2 Guidelines](https://github.com/agentiv2/guidelines) 
+- [AGENTI V2 Guidelines](https://github.com/agentiv2/guidelines)
