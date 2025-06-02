@@ -56,6 +56,7 @@ graph TD
 ## AGENTI V2 Compliance
 
 ### DIR1 Rules
+
 - All business logic is separated from UI
 - Services are abstracted behind interfaces
 - State management uses Riverpod
@@ -63,6 +64,7 @@ graph TD
 - Firebase services are properly abstracted
 
 ### Core Principles
+
 1. **Modularity**: Each feature is self-contained
 2. **Testability**: All components are unit-testable
 3. **Maintainability**: Clear separation of concerns
@@ -72,6 +74,7 @@ graph TD
 ## Future Development
 
 ### Planned Features
+
 1. **Calendar Integration**
    - Full Google/Apple Calendar API integration
    - Recurring appointments
