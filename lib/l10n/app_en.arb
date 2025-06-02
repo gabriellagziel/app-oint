@@ -1,0 +1,98 @@
+{
+  "@@locale": "en",
+  "quietModeTitle": "Quiet Mode",
+  "@quietModeTitle": {
+    "description": "Title for the quiet mode settings screen"
+  },
+  "quietModeDescription": "Mute non-critical notifications",
+  "@quietModeDescription": {
+    "description": "Description of what quiet mode does"
+  },
+  "quietModeDuration": "Quiet Mode Duration",
+  "@quietModeDuration": {
+    "description": "Label for the quiet mode duration dropdown"
+  },
+  "quietModeEndsAt": "Quiet Mode ends at",
+  "@quietModeEndsAt": {
+    "description": "Label showing when quiet mode will end"
+  },
+  "cancelQuietMode": "Cancel Quiet Mode",
+  "@cancelQuietMode": {
+    "description": "Button text to cancel quiet mode"
+  },
+  "thirtyMinutes": "30 minutes",
+  "@thirtyMinutes": {
+    "description": "Duration option for 30 minutes"
+  },
+  "oneHour": "1 hour",
+  "@oneHour": {
+    "description": "Duration option for 1 hour"
+  },
+  "untilTomorrow": "Until tomorrow",
+  "@untilTomorrow": {
+    "description": "Duration option until tomorrow"
+  },
+  "contactsPermissionRequired": "Contacts permission is required",
+  "contactsPermissionDenied": "Contacts permission is denied",
+  "contactsPermissionPermanentlyDenied": "Contacts permission is permanently denied",
+  "contactNotFound": "Contact not found",
+  "invalidContactId": "Invalid contact ID",
+  "invalidSearchQuery": "Invalid search query",
+  "@contactsPermissionRequired": {
+    "description": "Message shown when contacts permission is required"
+  },
+  "@contactsPermissionDenied": {
+    "description": "Message shown when contacts permission is denied"
+  },
+  "@contactsPermissionPermanentlyDenied": {
+    "description": "Message shown when contacts permission is permanently denied"
+  },
+  "@contactNotFound": {
+    "description": "Message shown when a contact is not found"
+  },
+  "@invalidContactId": {
+    "description": "Message shown when an invalid contact ID is provided"
+  },
+  "@invalidSearchQuery": {
+    "description": "Message shown when an invalid search query is provided"
+  },
+  "create_meeting": "Create Meeting",
+  "meeting_title_step": "What's the meeting about?",
+  "meeting_title_label": "Meeting Title",
+  "meeting_title_hint": "Enter meeting title",
+  "meeting_title_required": "Please enter a meeting title",
+  "meeting_title_continue": "Continue",
+  "meeting_datetime_step": "When is the meeting?",
+  "meeting_datetime_label": "Date & Time",
+  "meeting_date_select": "Select Date",
+  "meeting_time_select": "Select Time",
+  "meeting_datetime_continue": "Continue",
+  "meeting_type_step": "What type of meeting is this?",
+  "meeting_type_one_on_one": "One-on-One",
+  "meeting_type_one_on_one_desc": "A meeting between two people",
+  "meeting_type_group": "Group Meeting",
+  "meeting_type_group_desc": "A meeting with multiple participants",
+  "meeting_type_interview": "Interview",
+  "meeting_type_interview_desc": "A job or candidate interview",
+  "meeting_type_presentation": "Presentation",
+  "meeting_type_presentation_desc": "A presentation or demo",
+  "meeting_type_continue": "Continue",
+  "meeting_participants_step": "Who's attending?",
+  "meeting_participants_label": "Participants",
+  "meeting_participants_search": "Search contacts",
+  "meeting_participants_selected": "Selected Participants",
+  "meeting_participants_pick": "Pick Contact",
+  "meeting_participants_continue": "Continue",
+  "meeting_location_step": "Where is the meeting?",
+  "meeting_location_label": "Location",
+  "meeting_location_hint": "Enter meeting location",
+  "meeting_location_required": "Please enter a meeting location",
+  "meeting_location_continue": "Continue",
+  "meeting_notes_step": "Any additional notes?",
+  "meeting_notes_label": "Notes",
+  "meeting_notes_hint": "Enter any additional information",
+  "meeting_notes_continue": "Continue",
+  "meeting_summary_title": "Meeting Summary",
+  "meeting_creation_error": "Failed to create meeting",
+  "meeting_creation_error_dismiss": "Dismiss"
+} 
