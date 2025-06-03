@@ -7,7 +7,11 @@ project(runner LANGUAGES CXX)
 set(BINARY_NAME "app_oint")
 # The unique GTK application identifier for this application. See:
 # https://wiki.gnome.org/HowDoI/ChooseApplicationID
+<<<<<<< HEAD
 set(APPLICATION_ID "com.example.app_oint")
+=======
+set(APPLICATION_ID "com.appoint.app_oint")
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

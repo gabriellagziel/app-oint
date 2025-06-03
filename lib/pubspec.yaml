@@ -1,0 +1,43 @@
+name: app_oint
+description: Your appointment & task manager
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cloud_firestore: ^5.6.8
+  firebase_auth: ^5.5.4
+  google_sign_in: ^6.2.1
+  flutter_facebook_auth: ^7.1.2
+  sign_in_with_apple: ^7.0.1
+  flutter_riverpod: ^2.4.9
+  http: ^1.2.1
+  intl: ^0.19.0
+  url_launcher: ^6.3.1
+  share_plus: ^11.0.0
+  csv: ^6.0.0
+  fl_chart: ^1.0.0
+  flutter_local_notifications: ^19.2.1
+  timezone: ^0.10.1
+  flutter_stripe: ^11.5.0
+  logging: ^1.2.0
+  firebase_core: ^3.13.1
+  flutter_dotenv: ^5.1.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  mockito: ^5.4.4
+
+dev_dependencies:
+  build_runner: ^2.4.8
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - lib/l10n/ 

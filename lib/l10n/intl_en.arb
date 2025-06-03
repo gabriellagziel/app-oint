@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "onboarding_welcome_title": "Welcome to APP-OINT",
+  "onboarding_meeting_easy": "Scheduling meetings just got easier.",
+  "onboarding_ready": "You're ready to begin!",
+  "@onboarding_welcome_title": {
+    "description": "Title shown on the first onboarding screen"
+  },
+  "@onboarding_meeting_easy": {
+    "description": "Title shown on the second onboarding screen"
+  },
+  "@onboarding_ready": {
+    "description": "Title shown on the final onboarding screen"
+  }
+} 

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="he">
+=======
+<html>
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -17,12 +21,18 @@
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
+<<<<<<< HEAD
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="APP-OINT – All-in-one scheduling for web and mobile">
 
   <!-- Google Sign-In & Responsive Meta Tags -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-signin-client_id" content="944776470711-7hlbv8tlpq9dju8967pg88v6as328ca6.apps.googleusercontent.com">
+=======
+  <meta name="google-signin-client_id" content="370968098826-673idnfkdv8pi0lpg4ufpai22r9gvlf5.apps.googleusercontent.com">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -35,6 +45,7 @@
 
   <title>APP-OINT</title>
   <link rel="manifest" href="manifest.json">
+<<<<<<< HEAD
   <meta name="theme-color" content="#ffffff">
 
   <!-- Firebase SDK -->
@@ -61,5 +72,33 @@
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+=======
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+  <!-- Stripe.js -->
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
 </body>
 </html>

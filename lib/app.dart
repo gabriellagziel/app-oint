@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -58,3 +59,19 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Logged in!')));
 }
+=======
+import 'screens/login_screen.dart';
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'APP-OINT',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: LoginScreen(),
+    );
+  }
+}
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53

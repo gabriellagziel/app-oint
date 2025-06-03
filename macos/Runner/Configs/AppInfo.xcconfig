@@ -8,7 +8,14 @@
 PRODUCT_NAME = app_oint
 
 // The application's bundle identifier
+<<<<<<< HEAD
 PRODUCT_BUNDLE_IDENTIFIER = com.example.appOint
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
+=======
+PRODUCT_BUNDLE_IDENTIFIER = com.appoint.appOint
+
+// The copyright displayed in application information
+PRODUCT_COPYRIGHT = Copyright © 2025 com.appoint. All rights reserved.
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53

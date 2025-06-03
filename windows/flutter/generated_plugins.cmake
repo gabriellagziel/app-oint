@@ -6,12 +6,20 @@ list(APPEND FLUTTER_PLUGIN_LIST
   cloud_firestore
   firebase_auth
   firebase_core
+<<<<<<< HEAD
   permission_handler_windows
+=======
+  flutter_secure_storage_windows
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
   share_plus
   url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+<<<<<<< HEAD
+=======
+  flutter_local_notifications_windows
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

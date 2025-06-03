@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import '../services/google_sign_in_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -31,12 +32,25 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
     }
+=======
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/auth_service.dart';
+
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  Future<User?> signInWithGoogle() async {
+    final authService = AuthService();
+    return authService.signInWithGoogle();
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+<<<<<<< HEAD
         child: _loading
             ? const CircularProgressIndicator()
             : Column(
@@ -57,6 +71,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ],
               ),
+=======
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (kIsWeb)
+              SizedBox(
+                height: 50,
+                child: HtmlElementView(viewType: 'google-signin-btn'),
+              ),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  final result = await signInWithGoogle();
+                  if (result != null) {
+                    // Handle successful sign in
+                  }
+                } catch (e) {
+                  // Handle error
+                }
+              },
+              child: const Text('Sign in with Google'),
+            ),
+          ],
+        ),
+>>>>>>> e7105b1f419548c2d80209a9eca410177f0a8a53
       ),
     );
   }
