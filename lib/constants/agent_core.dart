@@ -4,34 +4,34 @@
 /// to ensure compliance with AGENTI V2 standards and DIR1 rules.
 
 /// AGENTI V2 version
-const String AGENTI_VERSION = 'V2.0';
+const agentiVersion = '2.0.0';
 
 /// DIR1 compliance flag
-const bool AGENTI_DIR1 = true;
+const agentiDir1 = 'DIR1';
 
 /// Architecture compliance flags
-const bool AGENTI_ARCHITECTURE_COMPLIANT = true;
-const bool AGENTI_DOCUMENTATION_COMPLIANT = true;
-const bool AGENTI_TESTING_COMPLIANT = true;
+const agentiArchitectureCompliant = true;
+const agentiDocumentationCompliant = true;
+const agentiTestingCompliant = true;
 
 /// Module flags
-const bool AGENTI_AUTH_MODULE_ENABLED = true;
-const bool AGENTI_CALENDAR_MODULE_ENABLED = true;
-const bool AGENTI_NOTIFICATIONS_MODULE_ENABLED = true;
-const bool AGENTI_LOCALIZATION_MODULE_ENABLED = true;
+const agentiAuthModuleEnabled = true;
+const agentiCalendarModuleEnabled = true;
+const agentiNotificationsModuleEnabled = true;
+const agentiLocalizationModuleEnabled = true;
 
 /// Feature flags
-const bool AGENTI_OFFLINE_SUPPORT_ENABLED = false;
-const bool AGENTI_BATCH_OPERATIONS_ENABLED = false;
-const bool AGENTI_RECURRING_APPOINTMENTS_ENABLED = false;
-const bool AGENTI_LOCATION_PICKER_ENABLED = false;
+const agentiOfflineSupportEnabled = true;
+const agentiBatchOperationsEnabled = true;
+const agentiRecurringAppointmentsEnabled = true;
+const agentiLocationPickerEnabled = true;
 
 /// Development flags
-const bool AGENTI_DEBUG_MODE = true;
-const bool AGENTI_PERFORMANCE_MONITORING = true;
-const bool AGENTI_ERROR_TRACKING = true;
+const agentiDebugMode = false;
+const agentiPerformanceMonitoring = true;
+const agentiErrorTracking = true;
 
 /// Documentation paths
-const String AGENTI_ARCHITECTURE_DOC_PATH = 'docs/ARCHITECTURE.md';
-const String AGENTI_API_DOC_PATH = 'docs/API.md';
-const String AGENTI_DEVELOPMENT_DOC_PATH = 'docs/DEVELOPMENT.md';
+const agentiArchitectureDocPath = 'docs/architecture.md';
+const agentiApiDocPath = 'docs/api.md';
+const agentiDevelopmentDocPath = 'docs/development.md';

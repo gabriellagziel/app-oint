@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart'; // Required for Freezed + Diagnostics
+import 'package:flutter/foundation.dart';
 
 part 'meeting_draft.freezed.dart';
 part 'meeting_draft.g.dart';
@@ -8,15 +8,11 @@ part 'meeting_draft.g.dart';
 @freezed
 class MeetingDraft with _$MeetingDraft {
   const factory MeetingDraft({
-    @Default('') String title,
-    @Default('') String location,
-    DateTime? datetime,
-    @Default([]) List<String> participants,
-    @Default('') String meetingType,
-    @Default('') String notes,
-    @Default('') String imageUrl,
-    @Default(0) int currentStep,
-    @Default(false) bool isComplete,
+    required String uuid,
+    required DateTime datetime,
+    required String meetingType,
+    required String location,
+    required String notes,
   }) = _MeetingDraft;
 
   const MeetingDraft._(); // Added private constructor for custom getters
@@ -29,66 +25,40 @@ class MeetingDraft with _$MeetingDraft {
 extension MeetingDraftX on MeetingDraft {
   /// Creates a copy of the draft with updated fields
   MeetingDraft copyWith({
-    String? title,
-    String? location,
+    String? uuid,
     DateTime? datetime,
-    List<String>? participants,
     String? meetingType,
+    String? location,
     String? notes,
-    String? imageUrl,
-    int? currentStep,
-    bool? isComplete,
   }) {
     return MeetingDraft(
-      title: title ?? this.title,
-      location: location ?? this.location,
+      uuid: uuid ?? this.uuid,
       datetime: datetime ?? this.datetime,
-      participants: participants ?? this.participants,
       meetingType: meetingType ?? this.meetingType,
+      location: location ?? this.location,
       notes: notes ?? this.notes,
-      imageUrl: imageUrl ?? this.imageUrl,
-      currentStep: currentStep ?? this.currentStep,
-      isComplete: isComplete ?? this.isComplete,
     );
   }
 
   /// Validates if all required fields are filled
   bool get isValid {
-    return title.isNotEmpty &&
-        datetime != null &&
-        participants.isNotEmpty &&
-        meetingType.isNotEmpty;
+    return datetime.isAfter(DateTime.now()) &&
+        meetingType.isNotEmpty &&
+        location.isNotEmpty &&
+        notes.isNotEmpty;
   }
-
-  /// Returns the next step number
-  int get nextStep => currentStep + 1;
-
-  /// Returns the previous step number
-  int get previousStep => currentStep - 1;
-
-  /// Checks if there is a next step available
-  bool get hasNextStep => currentStep < 5; // Assuming 6 steps total (0-5)
-
-  /// Checks if there is a previous step available
-  bool get hasPreviousStep => currentStep > 0;
 
   /// Validates the title field
   String? validateTitle() {
-    if (title.isEmpty) {
-      return 'Please enter a meeting title';
-    }
-    if (title.length > 100) {
-      return 'Title must be less than 100 characters';
+    if (uuid.isEmpty) {
+      return 'Please enter a meeting UUID';
     }
     return null;
   }
 
   /// Validates the datetime field
   String? validateDateTime() {
-    if (datetime == null) {
-      return 'Please select a date and time';
-    }
-    if (datetime!.isBefore(DateTime.now())) {
+    if (datetime.isBefore(DateTime.now())) {
       return 'Meeting time must be in the future';
     }
     return null;
@@ -98,17 +68,6 @@ extension MeetingDraftX on MeetingDraft {
   String? validateMeetingType() {
     if (meetingType.isEmpty) {
       return 'Please select a meeting type';
-    }
-    return null;
-  }
-
-  /// Validates the participants field
-  String? validateParticipants() {
-    if (participants.isEmpty) {
-      return 'Please add at least one participant';
-    }
-    if (participants.length > 50) {
-      return 'Maximum 50 participants allowed';
     }
     return null;
   }
@@ -131,18 +90,17 @@ extension MeetingDraftX on MeetingDraft {
 
   /// Validates the current step
   String? validateCurrentStep() {
-    switch (currentStep) {
+    switch (datetime.difference(DateTime.now()).inHours ~/ 24) {
       case 0:
         return validateTitle();
       case 1:
-      case 2:
         return validateDateTime();
-      case 3:
+      case 2:
         return validateMeetingType();
-      case 4:
-        return validateParticipants();
-      case 5:
+      case 3:
         return validateLocation();
+      case 4:
+        return validateNotes();
       default:
         return null;
     }

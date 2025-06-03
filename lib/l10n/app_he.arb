@@ -1,37 +1,25 @@
 {
   "@@locale": "he",
-  "quietModeTitle": "מצב שקט",
-  "@quietModeTitle": {
-    "description": "Title for the quiet mode settings screen"
-  },
-  "quietModeDescription": "השתק התראות לא קריטיות",
-  "@quietModeDescription": {
-    "description": "Description of what quiet mode does"
-  },
-  "quietModeDuration": "משך מצב שקט",
-  "@quietModeDuration": {
-    "description": "Label for the quiet mode duration dropdown"
-  },
-  "quietModeEndsAt": "מצב שקט יסתיים ב",
-  "@quietModeEndsAt": {
-    "description": "Label showing when quiet mode will end"
-  },
-  "cancelQuietMode": "בטל מצב שקט",
-  "@cancelQuietMode": {
-    "description": "Button text to cancel quiet mode"
-  },
-  "thirtyMinutes": "30 דקות",
-  "@thirtyMinutes": {
-    "description": "Duration option for 30 minutes"
-  },
-  "oneHour": "שעה",
-  "@oneHour": {
-    "description": "Duration option for 1 hour"
-  },
-  "untilTomorrow": "עד מחר",
-  "@untilTomorrow": {
-    "description": "Duration option until tomorrow"
-  },
+  "dashboard": "לוח בקרה",
+  "exportToCsv": "ייצוא ל-CSV",
+  "thisWeek": "השבוע",
+  "last30Days": "30 יום אחרונים",
+  "allTime": "כל הזמן",
+  "totalMeetingsLastMonth": "פגישות בחודש האחרון",
+  "newClients": "לקוחות חדשים",
+  "returningClients": "לקוחות חוזרים",
+  "inactiveClients": "לקוחות לא פעילים",
+  "meetingsPerWeek": "פגישות לשבוע",
+  "name": "שם",
+  "email": "דוא\"ל",
+  "phone": "טלפון",
+  "actions": "פעולות",
+  "sendWhatsApp": "שלח הודעת WhatsApp",
+  "sendEmail": "שלח דוא\"ל",
+  "topClients": "לקוחות מובילים",
+  "meetings": "פגישות",
+  "noInactiveClients": "אין לקוחות לא פעילים",
+  "noClients": "לא נמצאו לקוחות",
   "contactsPermissionRequired": "נדרשת הרשאה לגישה לאנשי קשר",
   "contactsPermissionDenied": "הגישה לאנשי קשר נדחתה",
   "contactsPermissionPermanentlyDenied": "הגישה לאנשי קשר נדחתה לצמיתות",
@@ -55,5 +43,13 @@
   },
   "@invalidSearchQuery": {
     "description": "Message shown when an invalid search query is provided"
-  }
+  },
+  "meeting_summary_title": "סיכום פגישה",
+  "meeting_type": "סוג",
+  "meeting_date": "תאריך",
+  "meeting_time": "שעה",
+  "meeting_participants": "משתתפים",
+  "meeting_location": "מיקום",
+  "meeting_notes": "הערות",
+  "none": "אין"
 } 

@@ -8,31 +8,18 @@ part of 'meeting_draft.dart';
 
 _$MeetingDraftImpl _$$MeetingDraftImplFromJson(Map<String, dynamic> json) =>
     _$MeetingDraftImpl(
-      title: json['title'] as String? ?? '',
-      location: json['location'] as String? ?? '',
-      datetime: json['datetime'] == null
-          ? null
-          : DateTime.parse(json['datetime'] as String),
-      participants: (json['participants'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      meetingType: json['meetingType'] as String? ?? '',
-      notes: json['notes'] as String? ?? '',
-      imageUrl: json['imageUrl'] as String? ?? '',
-      currentStep: (json['currentStep'] as num?)?.toInt() ?? 0,
-      isComplete: json['isComplete'] as bool? ?? false,
+      uuid: json['uuid'] as String,
+      datetime: DateTime.parse(json['datetime'] as String),
+      meetingType: json['meetingType'] as String,
+      location: json['location'] as String,
+      notes: json['notes'] as String,
     );
 
 Map<String, dynamic> _$$MeetingDraftImplToJson(_$MeetingDraftImpl instance) =>
     <String, dynamic>{
-      'title': instance.title,
-      'location': instance.location,
-      'datetime': instance.datetime?.toIso8601String(),
-      'participants': instance.participants,
+      'uuid': instance.uuid,
+      'datetime': instance.datetime.toIso8601String(),
       'meetingType': instance.meetingType,
+      'location': instance.location,
       'notes': instance.notes,
-      'imageUrl': instance.imageUrl,
-      'currentStep': instance.currentStep,
-      'isComplete': instance.isComplete,
     };

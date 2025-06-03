@@ -205,7 +205,6 @@ class _AppointmentEditScreenState extends ConsumerState<AppointmentEditScreen> {
                       '${_selectedDateTime.hour.toString().padLeft(2, '0')}:${_selectedDateTime.minute.toString().padLeft(2, '0')}',
                     ),
                     trailing: const Icon(Icons.calendar_today),
-                    // ignore: use_build_context_synchronously
                     onTap: () async {
                       final date = await showDatePicker(
                         context: context,
@@ -229,8 +228,6 @@ class _AppointmentEditScreenState extends ConsumerState<AppointmentEditScreen> {
                         time.hour,
                         time.minute,
                       );
-                      // ignore: use_build_context_synchronously
-                      // ignore: use_build_context_synchronously
                       setState(() {
                         _selectedDateTime = newDateTime;
                       });

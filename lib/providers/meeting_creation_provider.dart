@@ -1,134 +1,100 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/meeting_draft.dart';
-import '../models/appointment.dart';
-import '../services/appointments_service.dart';
-import '../services/contact_picker_service.dart';
-import '../providers/appointments_service_provider.dart';
-import '../providers/contact_picker_service_provider.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import '../models/meeting_type.dart';
+import '../models/meeting_location.dart';
 
-/// Provider for managing the meeting creation flow state
-final meetingCreationProvider =
-    StateNotifierProvider<MeetingCreationNotifier, MeetingDraft>((ref) {
-  return MeetingCreationNotifier(
-    appointmentsService: ref.watch(appointmentsServiceProvider),
-    contactPickerService: ref.watch(contactPickerServiceProvider),
-  );
-});
+part 'meeting_creation_provider.freezed.dart';
 
-/// Notifier class for managing meeting creation state
-class MeetingCreationNotifier extends StateNotifier<MeetingDraft> {
-  final AppointmentsService appointmentsService;
-  final ContactPickerService contactPickerService;
+@freezed
+class MeetingCreationState with _$MeetingCreationState {
+  const factory MeetingCreationState({
+    @Default(0) int currentStep,
+    @Default(false) bool isComplete,
+    @Default('') String title,
+    MeetingType? type,
+    DateTime? dateTime,
+    @Default([]) List<String> participants,
+    MeetingLocation? location,
+    @Default('') String notes,
+  }) = _MeetingCreationState;
+}
 
-  MeetingCreationNotifier({
-    required this.appointmentsService,
-    required this.contactPickerService,
-  }) : super(const MeetingDraft());
+class MeetingCreationNotifier extends StateNotifier<MeetingCreationState> {
+  MeetingCreationNotifier() : super(const MeetingCreationState());
 
-  /// Updates the meeting title
   void updateTitle(String title) {
-    state = state.copyWith(
-      title: title,
-      currentStep: state.nextStep,
-    );
+    state = state.copyWith(title: title);
   }
 
-  /// Updates the meeting date and time
-  void updateDateTime(DateTime datetime) {
-    state = state.copyWith(
-      datetime: datetime,
-      currentStep: state.nextStep,
-    );
+  void updateType(MeetingType type) {
+    state = state.copyWith(type: type);
   }
 
-  /// Updates the meeting type
-  void updateMeetingType(String type) {
-    state = state.copyWith(
-      meetingType: type,
-      currentStep: state.nextStep,
-    );
+  void updateDate(DateTime dateTime) {
+    state = state.copyWith(dateTime: dateTime);
   }
 
-  /// Adds a participant to the meeting
+  void updateParticipants(List<String> participants) {
+    state = state.copyWith(participants: participants);
+  }
+
   void addParticipant(String participant) {
     final participants = List<String>.from(state.participants)
       ..add(participant);
     state = state.copyWith(participants: participants);
   }
 
-  /// Removes a participant from the meeting
   void removeParticipant(String participant) {
     final participants = List<String>.from(state.participants)
       ..remove(participant);
     state = state.copyWith(participants: participants);
   }
 
-  /// Updates the meeting location
-  void updateLocation(String location) {
-    state = state.copyWith(
-      location: location,
-      currentStep: state.nextStep,
-    );
+  void updateLocation(MeetingLocation location) {
+    state = state.copyWith(location: location);
   }
 
-  /// Updates the meeting notes
   void updateNotes(String notes) {
-    state = state.copyWith(
-      notes: notes,
-      currentStep: state.nextStep,
-    );
+    state = state.copyWith(notes: notes);
   }
 
-  /// Updates the meeting image URL
-  void updateImageUrl(String imageUrl) {
-    state = state.copyWith(imageUrl: imageUrl);
+  void nextStep() {
+    if (state.currentStep < 5) {
+      state = state.copyWith(currentStep: state.currentStep + 1);
+    }
   }
 
-  /// Moves to a specific step in the flow
+  void previousStep() {
+    if (state.currentStep > 0) {
+      state = state.copyWith(currentStep: state.currentStep - 1);
+    }
+  }
+
   void goToStep(int step) {
     if (step >= 0 && step <= 5) {
       state = state.copyWith(currentStep: step);
     }
   }
 
-  /// Moves to the next step if available
-  void nextStep() {
-    if (state.hasNextStep) {
-      state = state.copyWith(currentStep: state.nextStep);
-    }
-  }
-
-  /// Moves to the previous step if available
-  void previousStep() {
-    if (state.hasPreviousStep) {
-      state = state.copyWith(currentStep: state.previousStep);
-    }
-  }
-
-  /// Resets the meeting draft to initial state
   void reset() {
-    state = const MeetingDraft();
+    state = const MeetingCreationState();
   }
 
-  /// Submits the meeting draft and creates the appointment
-  Future<String> submit() async {
-    if (!state.isValid) {
-      throw Exception('Meeting draft is not valid');
+  void submit() {
+    if (_isValid()) {
+      state = state.copyWith(isComplete: true);
     }
+  }
 
-    final appointment = Appointment(
-      id: '', // Will be set by Firestore
-      title: state.title,
-      datetime: state.datetime ?? DateTime.now(),
-      location: state.location,
-      notes: state.notes,
-      participants: state.participants,
-      userId: '', // Will be set by the service
-    );
-
-    final appointmentId =
-        await appointmentsService.createAppointment(appointment);
-    state = state.copyWith(isComplete: true);
-    return appointmentId;
+  bool _isValid() {
+    return state.type != null &&
+        state.dateTime != null &&
+        state.participants.isNotEmpty &&
+        state.location != null;
   }
 }
+
+final meetingCreationProvider =
+    StateNotifierProvider<MeetingCreationNotifier, MeetingCreationState>(
+  (ref) => MeetingCreationNotifier(),
+);

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_oint9/providers/meeting_creation_provider.dart';
-import 'package:app_oint9/utils/localizations_helper.dart';
+import '../providers/meeting_creation_provider.dart';
+import '../utils/localizations_helper.dart';
 
-/// Widget for displaying meeting summary
+/// Widget for displaying meeting summary before confirmation
 class MeetingStepSummary extends ConsumerWidget {
   const MeetingStepSummary({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final draft = ref.watch(meetingCreationProvider);
+    final state = ref.watch(meetingCreationProvider);
 
     return Card(
       child: Padding(
@@ -22,80 +22,86 @@ class MeetingStepSummary extends ConsumerWidget {
               LocalizationsHelper.getString(context, 'meeting_summary_title'),
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 16),
-            _buildSummaryItem(
+            const SizedBox(height: 24),
+            _buildInfoRow(
               context,
-              icon: Icons.title,
-              title:
-                  LocalizationsHelper.getString(context, 'meeting_title_label'),
-              value: draft.title,
+              LocalizationsHelper.getString(context, 'meeting_type'),
+              state.type?.name ??
+                  LocalizationsHelper.getString(context, 'none'),
             ),
-            _buildSummaryItem(
+            _buildInfoRow(
               context,
-              icon: Icons.calendar_today,
-              title: LocalizationsHelper.getString(
-                  context, 'meeting_datetime_label'),
-              value: draft.datetime != null
-                  ? '${draft.datetime!.day}/${draft.datetime!.month}/${draft.datetime!.year} '
-                      '${draft.datetime!.hour.toString().padLeft(2, '0')}:${draft.datetime!.minute.toString().padLeft(2, '0')}'
-                  : '',
+              LocalizationsHelper.getString(context, 'meeting_date'),
+              state.dateTime != null
+                  ? MaterialLocalizations.of(context)
+                      .formatFullDate(state.dateTime!)
+                  : LocalizationsHelper.getString(context, 'none'),
             ),
-            _buildSummaryItem(
+            _buildInfoRow(
               context,
-              icon: Icons.group,
-              title: LocalizationsHelper.getString(
-                  context, 'meeting_participants_label'),
-              value: draft.participants.join(', '),
+              LocalizationsHelper.getString(context, 'meeting_time'),
+              state.dateTime != null
+                  ? MaterialLocalizations.of(context).formatTimeOfDay(
+                      TimeOfDay.fromDateTime(state.dateTime!),
+                    )
+                  : LocalizationsHelper.getString(context, 'none'),
             ),
-            _buildSummaryItem(
+            _buildInfoRow(
               context,
-              icon: Icons.location_on,
-              title: LocalizationsHelper.getString(
-                  context, 'meeting_location_label'),
-              value: draft.location,
+              LocalizationsHelper.getString(context, 'meeting_participants'),
+              state.participants.isEmpty
+                  ? LocalizationsHelper.getString(context, 'none')
+                  : state.participants.join(', '),
             ),
-            if (draft.notes.isNotEmpty)
-              _buildSummaryItem(
+            if (state.location != null)
+              _buildInfoRow(
                 context,
-                icon: Icons.note,
-                title: LocalizationsHelper.getString(
-                    context, 'meeting_notes_label'),
-                value: draft.notes,
+                LocalizationsHelper.getString(context, 'meeting_location'),
+                state.location!.name,
               ),
+            if (state.notes.isNotEmpty)
+              _buildInfoRow(
+                context,
+                LocalizationsHelper.getString(context, 'meeting_notes'),
+                state.notes,
+              ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: state.type != null &&
+                        state.dateTime != null &&
+                        state.participants.isNotEmpty
+                    ? () {
+                        ref.read(meetingCreationProvider.notifier).submit();
+                        Navigator.of(context).pop();
+                      }
+                    : null,
+                child: Text(LocalizationsHelper.getString(
+                    context, 'meeting_creation_confirm')),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSummaryItem(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String value,
-  }) {
+  Widget _buildInfoRow(BuildContext context, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
+          SizedBox(
+            width: 120,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+          ),
+          Expanded(
+            child: Text(value),
           ),
         ],
       ),

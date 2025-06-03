@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
-import 'screens/personal_dashboard_screen.dart';
+import 'screens/dashboard_screen.dart';
 
 class AppOintApp extends ConsumerWidget {
   const AppOintApp({super.key});
@@ -18,10 +20,19 @@ class AppOintApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('he'), // Hebrew
+      ],
       home: authState.when(
-        data: (user) => user == null
-            ? const LoginScreen()
-            : const PersonalDashboardScreen(),
+        data: (user) =>
+            user == null ? const LoginScreen() : const DashboardScreen(),
         loading: () => const Scaffold(
           body: Center(child: CircularProgressIndicator()),
         ),

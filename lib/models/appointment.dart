@@ -11,6 +11,7 @@
 /// - location: Location of the appointment
 /// - notes: Optional notes about the appointment
 /// - userId: ID of the user who owns the appointment
+/// - participants: List of participant IDs
 ///
 /// Dependencies:
 /// - Cloud Firestore for data storage

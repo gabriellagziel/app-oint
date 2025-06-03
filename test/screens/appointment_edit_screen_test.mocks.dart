@@ -3,12 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
-import 'package:app_oint9/models/appointment.dart' as _i4;
-import 'package:app_oint9/services/appointments_service.dart' as _i2;
+import 'package:app_oint9/models/appointment.dart' as _i5;
+import 'package:app_oint9/models/meeting_stats.dart' as _i2;
+import 'package:app_oint9/services/appointments_service.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
+import 'package:mockito/src/dummies.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -24,70 +25,129 @@ import 'package:mockito/src/dummies.dart' as _i5;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeMeetingStats_0 extends _i1.SmartFake implements _i2.MeetingStats {
+  _FakeMeetingStats_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [AppointmentsService].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAppointmentsService extends _i1.Mock
-    implements _i2.AppointmentsService {
+    implements _i3.AppointmentsService {
   MockAppointmentsService() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<String> createAppointment(_i4.Appointment? appointment) =>
+  _i4.Future<List<String>> createAppointmentsBatch(
+          List<_i5.Appointment>? appointments) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createAppointmentsBatch,
+          [appointments],
+        ),
+        returnValue: _i4.Future<List<String>>.value(<String>[]),
+      ) as _i4.Future<List<String>>);
+
+  @override
+  _i4.Future<String> createAppointment(_i5.Appointment? appointment) =>
       (super.noSuchMethod(
         Invocation.method(
           #createAppointment,
           [appointment],
         ),
-        returnValue: _i3.Future<String>.value(_i5.dummyValue<String>(
+        returnValue: _i4.Future<String>.value(_i6.dummyValue<String>(
           this,
           Invocation.method(
             #createAppointment,
             [appointment],
           ),
         )),
-      ) as _i3.Future<String>);
+      ) as _i4.Future<String>);
 
   @override
-  _i3.Future<void> updateAppointment(_i4.Appointment? appointment) =>
+  _i4.Future<void> updateAppointmentsBatch(
+          List<_i5.Appointment>? appointments) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateAppointmentsBatch,
+          [appointments],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> updateAppointment(_i5.Appointment? appointment) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateAppointment,
           [appointment],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Future<void> deleteAppointment(String? appointmentId) =>
+  _i4.Future<void> deleteAppointmentsBatch(List<String>? appointmentIds) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteAppointmentsBatch,
+          [appointmentIds],
+        ),
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
+
+  @override
+  _i4.Future<void> deleteAppointment(String? appointmentId) =>
       (super.noSuchMethod(
         Invocation.method(
           #deleteAppointment,
           [appointmentId],
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i4.Future<void>.value(),
+        returnValueForMissingStub: _i4.Future<void>.value(),
+      ) as _i4.Future<void>);
 
   @override
-  _i3.Stream<List<_i4.Appointment>> getAppointmentsStream() =>
+  _i4.Stream<List<_i5.Appointment>> getAppointmentsStream() =>
       (super.noSuchMethod(
         Invocation.method(
           #getAppointmentsStream,
           [],
         ),
-        returnValue: _i3.Stream<List<_i4.Appointment>>.empty(),
-      ) as _i3.Stream<List<_i4.Appointment>>);
+        returnValue: _i4.Stream<List<_i5.Appointment>>.empty(),
+      ) as _i4.Stream<List<_i5.Appointment>>);
 
   @override
-  _i3.Future<_i4.Appointment?> getAppointment(String? id) =>
+  _i4.Future<_i5.Appointment?> getAppointment(String? appointmentId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getAppointment,
-          [id],
+          [appointmentId],
         ),
-        returnValue: _i3.Future<_i4.Appointment?>.value(),
-      ) as _i3.Future<_i4.Appointment?>);
+        returnValue: _i4.Future<_i5.Appointment?>.value(),
+      ) as _i4.Future<_i5.Appointment?>);
+
+  @override
+  _i4.Future<_i2.MeetingStats> getMeetingStats() => (super.noSuchMethod(
+        Invocation.method(
+          #getMeetingStats,
+          [],
+        ),
+        returnValue: _i4.Future<_i2.MeetingStats>.value(_FakeMeetingStats_0(
+          this,
+          Invocation.method(
+            #getMeetingStats,
+            [],
+          ),
+        )),
+      ) as _i4.Future<_i2.MeetingStats>);
 }

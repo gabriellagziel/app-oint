@@ -20,15 +20,11 @@ MeetingDraft _$MeetingDraftFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MeetingDraft {
-  String get title => throw _privateConstructorUsedError;
-  String get location => throw _privateConstructorUsedError;
-  DateTime? get datetime => throw _privateConstructorUsedError;
-  List<String> get participants => throw _privateConstructorUsedError;
+  String get uuid => throw _privateConstructorUsedError;
+  DateTime get datetime => throw _privateConstructorUsedError;
   String get meetingType => throw _privateConstructorUsedError;
+  String get location => throw _privateConstructorUsedError;
   String get notes => throw _privateConstructorUsedError;
-  String get imageUrl => throw _privateConstructorUsedError;
-  int get currentStep => throw _privateConstructorUsedError;
-  bool get isComplete => throw _privateConstructorUsedError;
 
   /// Serializes this MeetingDraft to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,15 +43,11 @@ abstract class $MeetingDraftCopyWith<$Res> {
       _$MeetingDraftCopyWithImpl<$Res, MeetingDraft>;
   @useResult
   $Res call(
-      {String title,
-      String location,
-      DateTime? datetime,
-      List<String> participants,
+      {String uuid,
+      DateTime datetime,
       String meetingType,
-      String notes,
-      String imageUrl,
-      int currentStep,
-      bool isComplete});
+      String location,
+      String notes});
 }
 
 /// @nodoc
@@ -73,53 +65,33 @@ class _$MeetingDraftCopyWithImpl<$Res, $Val extends MeetingDraft>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
-    Object? location = null,
-    Object? datetime = freezed,
-    Object? participants = null,
+    Object? uuid = null,
+    Object? datetime = null,
     Object? meetingType = null,
+    Object? location = null,
     Object? notes = null,
-    Object? imageUrl = null,
-    Object? currentStep = null,
-    Object? isComplete = null,
   }) {
     return _then(_value.copyWith(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      uuid: null == uuid
+          ? _value.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      datetime: null == datetime
+          ? _value.datetime
+          : datetime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      meetingType: null == meetingType
+          ? _value.meetingType
+          : meetingType // ignore: cast_nullable_to_non_nullable
               as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      datetime: freezed == datetime
-          ? _value.datetime
-          : datetime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      participants: null == participants
-          ? _value.participants
-          : participants // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      meetingType: null == meetingType
-          ? _value.meetingType
-          : meetingType // ignore: cast_nullable_to_non_nullable
-              as String,
       notes: null == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String,
-      imageUrl: null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentStep: null == currentStep
-          ? _value.currentStep
-          : currentStep // ignore: cast_nullable_to_non_nullable
-              as int,
-      isComplete: null == isComplete
-          ? _value.isComplete
-          : isComplete // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -133,15 +105,11 @@ abstract class _$$MeetingDraftImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String title,
-      String location,
-      DateTime? datetime,
-      List<String> participants,
+      {String uuid,
+      DateTime datetime,
       String meetingType,
-      String notes,
-      String imageUrl,
-      int currentStep,
-      bool isComplete});
+      String location,
+      String notes});
 }
 
 /// @nodoc
@@ -157,53 +125,33 @@ class __$$MeetingDraftImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? title = null,
-    Object? location = null,
-    Object? datetime = freezed,
-    Object? participants = null,
+    Object? uuid = null,
+    Object? datetime = null,
     Object? meetingType = null,
+    Object? location = null,
     Object? notes = null,
-    Object? imageUrl = null,
-    Object? currentStep = null,
-    Object? isComplete = null,
   }) {
     return _then(_$MeetingDraftImpl(
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
+      uuid: null == uuid
+          ? _value.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      datetime: null == datetime
+          ? _value.datetime
+          : datetime // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      meetingType: null == meetingType
+          ? _value.meetingType
+          : meetingType // ignore: cast_nullable_to_non_nullable
               as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      datetime: freezed == datetime
-          ? _value.datetime
-          : datetime // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      participants: null == participants
-          ? _value._participants
-          : participants // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      meetingType: null == meetingType
-          ? _value.meetingType
-          : meetingType // ignore: cast_nullable_to_non_nullable
-              as String,
       notes: null == notes
           ? _value.notes
           : notes // ignore: cast_nullable_to_non_nullable
               as String,
-      imageUrl: null == imageUrl
-          ? _value.imageUrl
-          : imageUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      currentStep: null == currentStep
-          ? _value.currentStep
-          : currentStep // ignore: cast_nullable_to_non_nullable
-              as int,
-      isComplete: null == isComplete
-          ? _value.isComplete
-          : isComplete // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -212,57 +160,30 @@ class __$$MeetingDraftImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MeetingDraftImpl extends _MeetingDraft with DiagnosticableTreeMixin {
   const _$MeetingDraftImpl(
-      {this.title = '',
-      this.location = '',
-      this.datetime,
-      final List<String> participants = const [],
-      this.meetingType = '',
-      this.notes = '',
-      this.imageUrl = '',
-      this.currentStep = 0,
-      this.isComplete = false})
-      : _participants = participants,
-        super._();
+      {required this.uuid,
+      required this.datetime,
+      required this.meetingType,
+      required this.location,
+      required this.notes})
+      : super._();
 
   factory _$MeetingDraftImpl.fromJson(Map<String, dynamic> json) =>
       _$$MeetingDraftImplFromJson(json);
 
   @override
-  @JsonKey()
-  final String title;
+  final String uuid;
   @override
-  @JsonKey()
-  final String location;
+  final DateTime datetime;
   @override
-  final DateTime? datetime;
-  final List<String> _participants;
-  @override
-  @JsonKey()
-  List<String> get participants {
-    if (_participants is EqualUnmodifiableListView) return _participants;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_participants);
-  }
-
-  @override
-  @JsonKey()
   final String meetingType;
   @override
-  @JsonKey()
+  final String location;
+  @override
   final String notes;
-  @override
-  @JsonKey()
-  final String imageUrl;
-  @override
-  @JsonKey()
-  final int currentStep;
-  @override
-  @JsonKey()
-  final bool isComplete;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'MeetingDraft(title: $title, location: $location, datetime: $datetime, participants: $participants, meetingType: $meetingType, notes: $notes, imageUrl: $imageUrl, currentStep: $currentStep, isComplete: $isComplete)';
+    return 'MeetingDraft(uuid: $uuid, datetime: $datetime, meetingType: $meetingType, location: $location, notes: $notes)';
   }
 
   @override
@@ -270,15 +191,11 @@ class _$MeetingDraftImpl extends _MeetingDraft with DiagnosticableTreeMixin {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'MeetingDraft'))
-      ..add(DiagnosticsProperty('title', title))
-      ..add(DiagnosticsProperty('location', location))
+      ..add(DiagnosticsProperty('uuid', uuid))
       ..add(DiagnosticsProperty('datetime', datetime))
-      ..add(DiagnosticsProperty('participants', participants))
       ..add(DiagnosticsProperty('meetingType', meetingType))
-      ..add(DiagnosticsProperty('notes', notes))
-      ..add(DiagnosticsProperty('imageUrl', imageUrl))
-      ..add(DiagnosticsProperty('currentStep', currentStep))
-      ..add(DiagnosticsProperty('isComplete', isComplete));
+      ..add(DiagnosticsProperty('location', location))
+      ..add(DiagnosticsProperty('notes', notes));
   }
 
   @override
@@ -286,37 +203,20 @@ class _$MeetingDraftImpl extends _MeetingDraft with DiagnosticableTreeMixin {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MeetingDraftImpl &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.location, location) ||
-                other.location == location) &&
+            (identical(other.uuid, uuid) || other.uuid == uuid) &&
             (identical(other.datetime, datetime) ||
                 other.datetime == datetime) &&
-            const DeepCollectionEquality()
-                .equals(other._participants, _participants) &&
             (identical(other.meetingType, meetingType) ||
                 other.meetingType == meetingType) &&
-            (identical(other.notes, notes) || other.notes == notes) &&
-            (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl) &&
-            (identical(other.currentStep, currentStep) ||
-                other.currentStep == currentStep) &&
-            (identical(other.isComplete, isComplete) ||
-                other.isComplete == isComplete));
+            (identical(other.location, location) ||
+                other.location == location) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      title,
-      location,
-      datetime,
-      const DeepCollectionEquality().hash(_participants),
-      meetingType,
-      notes,
-      imageUrl,
-      currentStep,
-      isComplete);
+  int get hashCode =>
+      Object.hash(runtimeType, uuid, datetime, meetingType, location, notes);
 
   /// Create a copy of MeetingDraft
   /// with the given fields replaced by the non-null parameter values.
@@ -336,38 +236,26 @@ class _$MeetingDraftImpl extends _MeetingDraft with DiagnosticableTreeMixin {
 
 abstract class _MeetingDraft extends MeetingDraft {
   const factory _MeetingDraft(
-      {final String title,
-      final String location,
-      final DateTime? datetime,
-      final List<String> participants,
-      final String meetingType,
-      final String notes,
-      final String imageUrl,
-      final int currentStep,
-      final bool isComplete}) = _$MeetingDraftImpl;
+      {required final String uuid,
+      required final DateTime datetime,
+      required final String meetingType,
+      required final String location,
+      required final String notes}) = _$MeetingDraftImpl;
   const _MeetingDraft._() : super._();
 
   factory _MeetingDraft.fromJson(Map<String, dynamic> json) =
       _$MeetingDraftImpl.fromJson;
 
   @override
-  String get title;
+  String get uuid;
   @override
-  String get location;
-  @override
-  DateTime? get datetime;
-  @override
-  List<String> get participants;
+  DateTime get datetime;
   @override
   String get meetingType;
   @override
+  String get location;
+  @override
   String get notes;
-  @override
-  String get imageUrl;
-  @override
-  int get currentStep;
-  @override
-  bool get isComplete;
 
   /// Create a copy of MeetingDraft
   /// with the given fields replaced by the non-null parameter values.

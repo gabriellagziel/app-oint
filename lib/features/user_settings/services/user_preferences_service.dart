@@ -1,39 +1,57 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:app_oint9/models/quiet_mode.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPreferencesService {
-  final FirebaseFirestore _firestore;
-  final String userId;
+  static const String _themeKey = 'theme';
+  static const String _languageKey = 'language';
+  static const String _notificationsEnabledKey = 'notifications_enabled';
+  static const String _notificationTimeKey = 'notification_time';
 
-  UserPreferencesService({
-    required this.userId,
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore ?? FirebaseFirestore.instance;
-
-  DocumentReference<Map<String, dynamic>> get _quietModeDoc => _firestore
-      .collection('users')
-      .doc(userId)
-      .collection('settings')
-      .doc('quietMode');
-
-  Future<void> setQuietMode(QuietMode quietMode) async {
-    await _quietModeDoc.set({
-      'enabled': quietMode.enabled,
-      'quietUntil': Timestamp.fromDate(quietMode.quietUntil),
-      'duration': quietMode.duration.inMinutes,
-    });
+  Future<void> setTheme(String theme) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_themeKey, theme);
   }
 
-  Stream<QuietMode> watchQuietMode() {
-    return _quietModeDoc.snapshots().map((doc) {
-      if (!doc.exists) return QuietMode.disabled();
+  Future<String> getTheme() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_themeKey) ?? 'system';
+  }
 
-      final data = doc.data()!;
-      return QuietMode(
-        enabled: data['enabled'] as bool,
-        quietUntil: (data['quietUntil'] as Timestamp).toDate(),
-        duration: Duration(minutes: data['duration'] as int),
-      );
-    });
+  Future<void> setLanguage(String language) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_languageKey, language);
+  }
+
+  Future<String> getLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_languageKey) ?? 'en';
+  }
+
+  Future<void> setNotificationsEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_notificationsEnabledKey, enabled);
+  }
+
+  Future<bool> getNotificationsEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_notificationsEnabledKey) ?? true;
+  }
+
+  Future<void> setNotificationTime(DateTime time) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_notificationTimeKey, time.toIso8601String());
+  }
+
+  Future<DateTime> getNotificationTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    final timeString = prefs.getString(_notificationTimeKey);
+    if (timeString == null) {
+      return DateTime.now().add(const Duration(hours: 1));
+    }
+    return DateTime.parse(timeString);
+  }
+
+  Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }

@@ -1,37 +1,25 @@
 {
   "@@locale": "en",
-  "quietModeTitle": "Quiet Mode",
-  "@quietModeTitle": {
-    "description": "Title for the quiet mode settings screen"
-  },
-  "quietModeDescription": "Mute non-critical notifications",
-  "@quietModeDescription": {
-    "description": "Description of what quiet mode does"
-  },
-  "quietModeDuration": "Quiet Mode Duration",
-  "@quietModeDuration": {
-    "description": "Label for the quiet mode duration dropdown"
-  },
-  "quietModeEndsAt": "Quiet Mode ends at",
-  "@quietModeEndsAt": {
-    "description": "Label showing when quiet mode will end"
-  },
-  "cancelQuietMode": "Cancel Quiet Mode",
-  "@cancelQuietMode": {
-    "description": "Button text to cancel quiet mode"
-  },
-  "thirtyMinutes": "30 minutes",
-  "@thirtyMinutes": {
-    "description": "Duration option for 30 minutes"
-  },
-  "oneHour": "1 hour",
-  "@oneHour": {
-    "description": "Duration option for 1 hour"
-  },
-  "untilTomorrow": "Until tomorrow",
-  "@untilTomorrow": {
-    "description": "Duration option until tomorrow"
-  },
+  "dashboard": "Dashboard",
+  "exportToCsv": "Export to CSV",
+  "thisWeek": "This Week",
+  "last30Days": "Last 30 Days",
+  "allTime": "All Time",
+  "totalMeetingsLastMonth": "Total Meetings (Last Month)",
+  "newClients": "New Clients",
+  "returningClients": "Returning Clients",
+  "inactiveClients": "Inactive Clients",
+  "meetingsPerWeek": "Meetings per Week",
+  "name": "Name",
+  "email": "Email",
+  "phone": "Phone",
+  "actions": "Actions",
+  "sendWhatsApp": "Send WhatsApp Message",
+  "sendEmail": "Send Email",
+  "topClients": "Top Clients",
+  "meetings": "meetings",
+  "noInactiveClients": "No inactive clients",
+  "noClients": "No clients found",
   "contactsPermissionRequired": "Contacts permission is required",
   "contactsPermissionDenied": "Contacts permission is denied",
   "contactsPermissionPermanentlyDenied": "Contacts permission is permanently denied",
@@ -94,5 +82,12 @@
   "meeting_notes_continue": "Continue",
   "meeting_summary_title": "Meeting Summary",
   "meeting_creation_error": "Failed to create meeting",
-  "meeting_creation_error_dismiss": "Dismiss"
+  "meeting_creation_error_dismiss": "Dismiss",
+  "meeting_type": "Type",
+  "meeting_date": "Date",
+  "meeting_time": "Time",
+  "meeting_participants": "Participants",
+  "meeting_location": "Location",
+  "meeting_notes": "Notes",
+  "none": "None"
 } 
