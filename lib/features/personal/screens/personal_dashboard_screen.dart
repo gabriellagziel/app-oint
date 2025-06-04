@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:csv/csv.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -103,6 +104,8 @@ class PersonalDashboardScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               _buildAppointmentChart(context, meetings),
               const SizedBox(height: 24),
+              _buildWeeklySummaryChart(context, meetings),
+              const SizedBox(height: 24),
               _buildInactiveClients(context, clientStats),
             ],
           );
@@ -117,45 +120,44 @@ class PersonalDashboardScreen extends ConsumerWidget {
     BuildContext context,
     List<QueryDocumentSnapshot> meetings,
   ) {
+    final eventMap = <DateTime, List<Map<String, dynamic>>>{};
+    for (final doc in meetings) {
+      final data = doc.data() as Map<String, dynamic>;
+      final ts = (data['timestamp'] as Timestamp).toDate();
+      final day = DateTime(ts.year, ts.month, ts.day);
+      eventMap.putIfAbsent(day, () => []).add(data);
+    }
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Upcoming Meetings',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: 16),
-            if (meetings.isEmpty)
-              const Text('No upcoming meetings')
-            else
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: meetings.length,
-                itemBuilder: (context, index) {
-                  final meeting =
-                      meetings[index].data() as Map<String, dynamic>;
-                  return ListTile(
-                    title: Text(meeting['clientName'] ?? 'Unnamed Client'),
-                    subtitle: Text(
-                      (meeting['timestamp'] as Timestamp)
-                          .toDate()
-                          .toString()
-                          .substring(0, 16),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.message),
-                      onPressed: () {
-                        _launchEmail(meeting['clientEmail'] ?? '');
-                      },
-                    ),
-                  );
-                },
+        child: DefaultTabController(
+          length: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Upcoming Meetings',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-          ],
+              const SizedBox(height: 16),
+              const TabBar(
+                tabs: [
+                  Tab(text: 'List'),
+                  Tab(text: 'Calendar'),
+                ],
+              ),
+              SizedBox(
+                height: 300,
+                child: TabBarView(
+                  children: [
+                    _UpcomingMeetingsList(meetings: meetings, onEmail: _launchEmail),
+                    _UpcomingMeetingsCalendar(events: eventMap),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -214,7 +216,7 @@ class PersonalDashboardScreen extends ConsumerWidget {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: topClients.take(3).length,
+              itemCount: topClients.take(5).length,
               itemBuilder: (context, index) {
                 final client = topClients[index];
                 return ListTile(
@@ -299,6 +301,63 @@ class PersonalDashboardScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildWeeklySummaryChart(
+    BuildContext context,
+    List<QueryDocumentSnapshot> meetings,
+  ) {
+    final counts = List<int>.filled(7, 0);
+    final now = DateTime.now();
+    for (final doc in meetings) {
+      final ts = (doc.data() as Map<String, dynamic>)['timestamp'] as Timestamp;
+      final date = DateTime(ts.toDate().year, ts.toDate().month, ts.toDate().day);
+      final diff = now.difference(date).inDays;
+      if (diff >= 0 && diff < 7) {
+        counts[6 - diff]++;
+      }
+    }
+
+    final bars = [
+      for (int i = 0; i < 7; i++)
+        BarChartGroupData(
+          x: i,
+          barRods: [
+            BarChartRodData(
+              toY: counts[i].toDouble(),
+              color: Theme.of(context).primaryColor,
+              width: 12,
+            ),
+          ],
+        )
+    ];
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Meetings (Last 7 Days)',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 200,
+              child: BarChart(
+                BarChartData(
+                  gridData: const FlGridData(show: true),
+                  titlesData: const FlTitlesData(show: false),
+                  borderData: FlBorderData(show: true),
+                  barGroups: bars,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildInactiveClients(
     BuildContext context,
     Map<String, Map<String, dynamic>> stats,
@@ -351,6 +410,83 @@ class PersonalDashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _UpcomingMeetingsList extends StatelessWidget {
+  final List<QueryDocumentSnapshot> meetings;
+  final void Function(String email) onEmail;
+
+  const _UpcomingMeetingsList({required this.meetings, required this.onEmail});
+
+  @override
+  Widget build(BuildContext context) {
+    if (meetings.isEmpty) {
+      return const Center(child: Text('No upcoming meetings'));
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: meetings.length,
+      itemBuilder: (context, index) {
+        final meeting = meetings[index].data() as Map<String, dynamic>;
+        return ListTile(
+          title: Text(meeting['clientName'] ?? 'Unnamed Client'),
+          subtitle: Text(
+            (meeting['timestamp'] as Timestamp)
+                .toDate()
+                .toString()
+                .substring(0, 16),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.message),
+            onPressed: () => onEmail(meeting['clientEmail'] ?? ''),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _UpcomingMeetingsCalendar extends StatefulWidget {
+  final Map<DateTime, List<Map<String, dynamic>>> events;
+
+  const _UpcomingMeetingsCalendar({required this.events});
+
+  @override
+  State<_UpcomingMeetingsCalendar> createState() => _UpcomingMeetingsCalendarState();
+}
+
+class _UpcomingMeetingsCalendarState extends State<_UpcomingMeetingsCalendar> {
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TableCalendar<Map<String, dynamic>>(
+          firstDay: DateTime.now().subtract(const Duration(days: 365)),
+          lastDay: DateTime.now().add(const Duration(days: 365)),
+          focusedDay: _focusedDay,
+          selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+          eventLoader: (day) => widget.events[DateTime(day.year, day.month, day.day)] ?? [],
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+            });
+          },
+        ),
+        if (_selectedDay != null)
+          ...?widget.events[DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day)]?.map(
+            (e) => ListTile(
+              title: Text(e['clientName'] ?? ''),
+              subtitle: Text((e['timestamp'] as Timestamp).toDate().toString().substring(0, 16)),
+            ),
+          ),
+      ],
     );
   }
 }
